@@ -19,6 +19,9 @@ Question 4- Database structure with model ORM
 #Install dependencies
 npm i 
 
+#Transpile code 
+npm run prestart
+
 #Run code for Question 1 - rick and morty
 npm run start:rick
 
