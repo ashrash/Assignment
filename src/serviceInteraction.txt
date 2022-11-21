@@ -1,0 +1,48 @@
+Imagine that we have two services - ServiceA and ServiceB. Both services have to
+communicate with each other in some way.
+
+Given this information, please answer following questions:
+1) What options do we have to establish such communication?
+    Micorservices can communicate with each other by synchronous or asynchronos communication method.
+    Synchronous - Using protocols like HTTP or gRCP. (Maybe asynchronos too)
+    Asynchronos - Using technologies like message queues (Kafka, RabbitMQ)
+
+2) For each option describe what are the pros and cons of this solution?
+    Each of the option has its own pros and cons, hence the ideal thing to do is to decide based on the use case.
+    HTTP -
+        Pros
+            - Communication happens in real time.
+            - Simple and intuitive to communicate.
+            - Low Latency and immediate response.
+        Cons
+            - Http request do not have failure/ retry mechanism(Target service down, not reachable, overwhelmed)
+            - Caller is blocked until response is recieved (Optional, But mostly implemented for a blocking call)
+            - Servers needs to be highly available to accept synchronous requests.
+            - Risk of cascading failures.
+            - Strong coupling
+
+    Message queuing - 
+        Pros 
+            - Reduced coupling. 
+            - Multiple subscribers.
+            - Failure/Retry mechanism in case of failure.
+            - Upstream service can be more responsive and not wait for a response.
+        Cons
+            - Using Failure/retry mechanism. Too many failed requests can cause a bottleneck
+            - Infrastructure costs are high for message queuing systems.
+            - Complex to design asynchronos system.
+            - Latency will be high when message queues are filled.
+
+3) For each option describe what are the cases the solution fits best?
+    Synchronous- HTTP - if use case has/needs: 
+        - Simple query.
+        - Needs the result before proceeding further. 
+        - No need for retry mechanism.
+        - Operation needs to be synchronous.
+        Chat, Payment system.
+    Asynchronos - Message queues - if use case has/needs:
+        - Result of the request is not required to proceed with further operations.
+        - Needs retry failure/mechanism.
+        - Multiple services consumes the same request (1 publisher, multiple subscribers)
+        - The operation need a lot of time to complete.
+        Indexing a search, Analytics, Notifications
